@@ -172,7 +172,7 @@
 
     var coordSystem;
 
-    var createShapeFiles = function (esrigraphics, encoded, cSys) {
+    var createShapeFiles = function (esrigraphics, encoded, cSys, filename) {
         dbfEncoded = encoded;
         coordSystem = cSys;
         var pointgraphics = [], polylinegraphics = [], polygongraphics = [];
@@ -196,9 +196,9 @@
                     throw new Error('Unknown geometry type');
             }
         }
-        var points = getShapefile('POINT', pointgraphics);
-        var polylines = getShapefile('POLYLINE', polylinegraphics);
-        var polygons = getShapefile('POLYGON', polygongraphics);
+        var points = getShapefile('POINT', pointgraphics,filename);
+        var polylines = getShapefile('POLYLINE', polylinegraphics, filename);
+        var polygons = getShapefile('POLYGON', polygongraphics, filename);
 
         return {
             pointShapefile: points,
@@ -207,7 +207,7 @@
         };
     };
 
-    var getShapefile = function (shapetype, arrayToUse) {
+    var getShapefile = function (shapetype, arrayToUse, fileName) {
         var shapefile = {};
         if (typeof (shapetype) === 'undefined' && !(shapetype === 'POINT' || shapetype === 'POLYLINE' || shapetype === 'POLYGON')) {
             return {
@@ -227,25 +227,30 @@
 
         shapefile.shp = {};
         shapefile.shp.blob = new Blob([resultObject.shape], { 'type': 'application/octet-stream' });
-        shapefile.shp.name = shapetype + 'fileName.shp';
+        //shapefile.shp.name = shapetype + 'fileName.shp';
+        shapefile.shp.name = fileName+'.shp';
         shapefile.shx = {};
         shapefile.shx.blob = new Blob([resultObject.shx], { 'type': 'application/octet-stream' });
-        shapefile.shx.name = shapetype + 'fileName.shx';
+        //shapefile.shx.name = shapetype + 'fileName.shx';
+        shapefile.shx.name = fileName+'.shx';
         shapefile.dbf = {};
         shapefile.dbf.blob = new Blob([resultObject.dbf], { 'type': 'application/octet-stream' });
-        shapefile.dbf.name = shapetype + 'fileName.dbf';
+        //shapefile.dbf.name = shapetype + 'fileName.dbf';
+        shapefile.dbf.name = fileName+'.dbf';
 
         
         if (dbfEncoded == 'UTF8') {
             shapefile.cpg = {};
             shapefile.cpg.blob = new Blob(['65001'], { 'type': 'plain/text' });
-            shapefile.cpg.name = shapetype + 'fileName.cpg';
+            //shapefile.cpg.name = shapetype + 'fileName.cpg';
+            shapefile.cpg.name = fileName+'.cpg';
         }
 
         if (coordSystem) {
             shapefile.prj = {};
             shapefile.prj.blob = new Blob([coordSystem], { 'type': 'plain/text' });
-            shapefile.prj.name = shapetype + 'fileName.prj';
+            //shapefile.prj.name = shapetype + 'fileName.prj';
+            shapefile.prj.name = fileName+'.prj';
         }
 
         return {
