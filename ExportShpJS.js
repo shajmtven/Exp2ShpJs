@@ -644,15 +644,18 @@
                 var attValue;
                 switch (dbfEncoded) {
                     case 'UTF8':
-                        attValue = utf8encode(rowData[attName].toString() || rownum.toString());
+                        attValue = utf8encode(rowData[attName].toString());
+                        //attValue = utf8encode(rowData[attName].toString() || rownum.toString());
                         break;
 
                     case 'Win1251':
-                        attValue = unicodeToWin1251(rowData[attName].toString() || rownum.toString());
+                        attValue = unicodeToWin1251(rowData[attName].toString());
+                        //attValue = unicodeToWin1251(rowData[attName].toString() || rownum.toString());
                         break;
 
                     default:
-                        attValue = rowData[attName].toString() || rownum.toString();
+                        attValue = rowData[attName].toString();
+                        //attValue = rowData[attName].toString() || rownum.toString();
                 }
 
                 if (dataType == 'L') {
